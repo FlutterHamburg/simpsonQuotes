@@ -43,10 +43,8 @@ class _MyHomePageState extends State<MyHomePage> {
   Future<Quote> getQuote() async {
     final response =
         await http.get(Uri.https('thesimpsonsquoteapi.glitch.me', 'quotes'));
-    var responseBody =
-        response.body.toString().replaceFirst('[', '').replaceFirst(']', '');
-    print(responseBody);
-    print(Quote.fromJson(jsonDecode(responseBody)));
+    var responseBody = response.body
+        .toString(); //.replaceFirst('[', '').replaceFirst(']', '');
     if (response.statusCode == 200) {
       return Quote.fromJson(jsonDecode(responseBody));
     } else {
@@ -62,27 +60,54 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       body: Center(
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            FutureBuilder<Quote>(
-                future: futureQuote,
-                builder: (context, snapshot) {
-                  if (snapshot.hasData) {
-                    print('snapshot.data: ${snapshot.data}');
-                    return Column(
-                      children: [
-                        Text(snapshot.data.character),
-                        Text(snapshot.data.quote),
-                        Image.network(snapshot.data.image.toString()),
-                      ],
-                    );
-                  } else if (snapshot.hasError) {
-                    return Text("${snapshot.error}");
-                  }
+          children: [
+            Card(
+              color: Colors.white54,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(15.0)),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  FutureBuilder<Quote>(
+                      future: futureQuote,
+                      builder: (context, snapshot) {
+                        if (snapshot.hasData) {
+                          return Column(
+                            children: [
+                              Text(
+                                snapshot.data.character,
+                                style: TextStyle(fontWeight: FontWeight.bold),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Text(
+                                  "\"${snapshot.data.quote}\"",
+                                  style: TextStyle(fontStyle: FontStyle.italic),
+                                ),
+                              ),
+                              Image.network(snapshot.data.image.toString()),
+                            ],
+                          );
+                        } else if (snapshot.hasError) {
+                          return Text("${snapshot.error}");
+                        }
 
-                  // By default, show a loading spinner.
-                  return CircularProgressIndicator();
-                }),
+                        // By default, show a loading spinner.
+                        return CircularProgressIndicator();
+                      }),
+                ],
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: ElevatedButton(
+                  onPressed: () {
+                    setState(() {
+                      futureQuote = getQuote();
+                    });
+                  },
+                  child: Text('Load new Quote')),
+            ),
           ],
         ),
       ),

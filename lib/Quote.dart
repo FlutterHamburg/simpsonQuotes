@@ -14,9 +14,9 @@ class Quote {
 
   factory Quote.fromJson(var json) {
     return Quote(
-        quote: json['quote'],
-        character: json['character'],
-        image: json['image'],
-        characterDirection: json['characterDirection']);
+        quote: json[0]['quote'],
+        character: json[0]['character'],
+        image: json[0]['image'],
+        characterDirection: json[0]['characterDirection']);
   }
 }
