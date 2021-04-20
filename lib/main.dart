@@ -59,56 +59,62 @@ class _MyHomePageState extends State<MyHomePage> {
         title: Text(widget.title),
       ),
       body: Center(
-        child: Column(
-          children: [
-            Card(
-              color: Colors.white54,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(15.0)),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  FutureBuilder<Quote>(
-                      future: futureQuote,
-                      builder: (context, snapshot) {
-                        if (snapshot.hasData) {
-                          return Column(
-                            children: [
-                              Text(
-                                snapshot.data.character,
-                                style: TextStyle(fontWeight: FontWeight.bold),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Text(
-                                  "\"${snapshot.data.quote}\"",
-                                  style: TextStyle(fontStyle: FontStyle.italic),
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              Card(
+                color: Colors.white54,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(15.0)),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    FutureBuilder<Quote>(
+                        future: futureQuote,
+                        builder: (context, snapshot) {
+                          if (snapshot.hasData) {
+                            return Column(
+                              children: [
+                                Text(
+                                  snapshot.data.character,
+                                  style: TextStyle(fontWeight: FontWeight.bold),
                                 ),
-                              ),
-                              Image.network(snapshot.data.image.toString()),
-                            ],
-                          );
-                        } else if (snapshot.hasError) {
-                          return Text("${snapshot.error}");
-                        }
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Text(
+                                    "\"${snapshot.data.quote}\"",
+                                    style:
+                                        TextStyle(fontStyle: FontStyle.italic),
+                                  ),
+                                ),
+                                Image.network(
+                                  snapshot.data.image.toString(),
+                                  height: 300.0,
+                                ),
+                              ],
+                            );
+                          } else if (snapshot.hasError) {
+                            return Text("${snapshot.error}");
+                          }
 
-                        // By default, show a loading spinner.
-                        return CircularProgressIndicator();
-                      }),
-                ],
+                          // By default, show a loading spinner.
+                          return CircularProgressIndicator();
+                        }),
+                  ],
+                ),
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: ElevatedButton(
-                  onPressed: () {
-                    setState(() {
-                      futureQuote = getQuote();
-                    });
-                  },
-                  child: Text('Load new Quote')),
-            ),
-          ],
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: ElevatedButton(
+                    onPressed: () {
+                      setState(() {
+                        futureQuote = getQuote();
+                      });
+                    },
+                    child: Text('Load new Quote')),
+              ),
+            ],
+          ),
         ),
       ),
     );
